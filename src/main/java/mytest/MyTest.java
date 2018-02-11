@@ -21,9 +21,9 @@ public class MyTest {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    @RequestMapping(value = "/producer/msg", method = RequestMethod.POST)
+    @RequestMapping(value = "/test", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity send(@RequestBody JsonElement body) {
+    public ResponseEntity send() {
 
 
         String url = "http://docker104-eiffel999.lmera.ericsson.se:8082/job/test3/build";
@@ -32,7 +32,7 @@ public class MyTest {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-        params.add("json", "{\"parameter\": [{\"name\":\"PARAM1\", \"value\":'{\"metatags\":\"my_metatags\"}'}]}");
+        params.add("json", "{\"parameter\": [{\"name\":\"PARAM1\", \"value\":'{\"metatags\":\"my_metatags_fromJava_Client\"}'}]}");
 
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(params, headers);
