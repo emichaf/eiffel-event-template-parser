@@ -30,6 +30,7 @@ class EventTemplateHandler {
     private static final String EVENT_TEMPLATE_PATH = "templates/";
     private static final String EVENT_SCHEMA_PATH = "schemas/input/";
 
+
     public static void main(String[] args) {
         String EventName = "EiffelActivityFinishedEvent";
 
