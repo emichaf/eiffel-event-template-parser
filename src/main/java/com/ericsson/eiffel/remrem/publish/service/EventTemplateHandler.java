@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class EventTemplateHandler {
+public class EventTemplateHandler {
     private final Configuration configuration = Configuration.builder()
             .jsonProvider(new JacksonJsonNodeJsonProvider())
             .mappingProvider(new JacksonMappingProvider())
@@ -58,7 +58,7 @@ class EventTemplateHandler {
     }
 
     // TemplateParser
-    public void templateParser(String event_template, String json_data , String event_name){
+    public JsonNode templateParser(String event_template, String json_data , String event_name){
         JsonNode updatedJson = null;
         JsonFactory factory = new JsonFactory();
         ObjectMapper mapper = new ObjectMapper(factory);
@@ -119,7 +119,8 @@ class EventTemplateHandler {
             }
         } // while
 
-        System.out.println(updatedJson.toString());
+        return updatedJson;
+
     }
 
     public JsonNode jsonPathHandlerAdd(JsonNode updated_Json, String jsonkey, Object pojo){
