@@ -20,45 +20,58 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class EventTemplateHandler {
-    private final Configuration configuration = Configuration.builder()
+class EventParserTest {
+    private static final Configuration configuration = Configuration.builder()
             .jsonProvider(new JacksonJsonNodeJsonProvider())
             .mappingProvider(new JacksonMappingProvider())
             .build();
 
     // Path in Semantics JAR
-    // TODO: to be removed templates read from semantic JAR
-    public final String EVENT_TEMPLATE_PATH = "templates/";
-    public final String EVENT_SCHEMA_PATH = "schemas/input/";
+    private static final String EVENT_TEMPLATE_PATH = "templates/";
+    private static final String EVENT_SCHEMA_PATH = "schemas/input/";
 
+
+    public static void main(String[] args) {
+        String EventName = "EiffelActivityFinishedEvent";
+
+        // Semantics
+        String Template = accessFileInSemanticJar(EVENT_TEMPLATE_PATH + EventName.toLowerCase() + ".json");
+        //TODO: to be removed
+        //String Template = fetchDummyEventTemplate(EventName);
+
+        // TODO: remove dummy data
+        String FetchDummyData = fetchDummyData("./testdummydata/dummy_data_" +EventName+".json");
+
+        templateParser(Template, FetchDummyData, EventName);
+    }
 
 
     //TODO: to be removed
     // FetchEventTemplate
-    public String fetchDummyEventTemplate(String eventname){
+    public static String fetchDummyEventTemplate(String eventname){
         String TemplateString = null;
         try {
             TemplateString = new String(Files.readAllBytes(Paths.get("./testtemplates/"+eventname.toLowerCase()+".json")), StandardCharsets.UTF_8);
         }catch (IOException e1) {
             System.out.println(e1.toString());
         }
-      return TemplateString;
+        return TemplateString;
     }
 
     //TODO: to be removed
     // FetchEventSchema
-    public String fetchDummyEventEventSchema(String eventname){
+    public static String fetchDummyEventEventSchema(String eventname){
         String EventSchemaString = null;
         try {
             EventSchemaString = new String(Files.readAllBytes(Paths.get("./testschemas/" +eventname+".json")), StandardCharsets.UTF_8);
         }catch (IOException e1) {
             System.out.println(e1.toString());
         }
-      return EventSchemaString;
+        return EventSchemaString;
     }
 
     // TemplateParser
-    public void templateParser(String event_template, String json_data , String event_name){
+    public static void templateParser(String event_template, String json_data , String event_name){
         JsonNode updatedJson = null;
         JsonFactory factory = new JsonFactory();
         ObjectMapper mapper = new ObjectMapper(factory);
@@ -83,7 +96,7 @@ class EventTemplateHandler {
             if(m.find()){
                 String mykey = "$." + templateParamHandler(field.getKey());
                 String myvalue = field.getValue().toString();
-            try {
+                try {
                     // Fetch Class name in Event Schema
                     // TODO : remove dummy
                     //String event_schema = fetchDummyEventEventSchema(event_name);
@@ -113,26 +126,26 @@ class EventTemplateHandler {
                 }
 
             }else{  // No POJO needed for update
-                    String mykey = "$." + templateParamHandler(field.getKey());
-                    Object myvalue = field.getValue();
-                    updatedJson = jsonPathHandlerSet(updatedJson, mykey, myvalue);
+                String mykey = "$." + templateParamHandler(field.getKey());
+                Object myvalue = field.getValue();
+                updatedJson = jsonPathHandlerSet(updatedJson, mykey, myvalue);
             }
         } // while
 
         System.out.println(updatedJson.toString());
     }
 
-    public JsonNode jsonPathHandlerAdd(JsonNode updated_Json, String jsonkey, Object pojo){
+    public static JsonNode jsonPathHandlerAdd(JsonNode updated_Json, String jsonkey, Object pojo){
         updated_Json = JsonPath.using(configuration).parse(updated_Json.toString()).add(jsonkey, pojo).json();
         return updated_Json;
     }
 
-    public JsonNode jsonPathHandlerSet(JsonNode updated_Json, String jsonkey, Object Jsonvalue){
+    public static JsonNode jsonPathHandlerSet(JsonNode updated_Json, String jsonkey, Object Jsonvalue){
         updated_Json = JsonPath.using(configuration).parse(updated_Json.toString()).set(jsonkey, Jsonvalue).json();
         return updated_Json;
     }
 
-    public String templateParamHandler(String jsonkey){
+    public static String templateParamHandler(String jsonkey){
         String[] strArray = jsonkey.split("\\.");
         Pattern p = Pattern.compile("links\\[\\d+\\]$");  // if ends with [d+]
         Matcher m = p.matcher(strArray[0]);
@@ -147,10 +160,10 @@ class EventTemplateHandler {
         }catch (ArrayIndexOutOfBoundsException e){
             throw new IllegalArgumentException("jsonkey in data to be parsed is not valid : " + jsonkey);
         }
-      return jsonkey;
+        return jsonkey;
     }
 
-    public String schemaClassPathHandler(String jsonkey){
+    public static String schemaClassPathHandler(String jsonkey){
         String[] strArray = jsonkey.split("\\.");
         jsonkey = "";
         for (String s: strArray) {
@@ -161,17 +174,17 @@ class EventTemplateHandler {
     }
 
     // dummy data
-    public String fetchDummyData(String filename){
+    public static String fetchDummyData(String filename){
         String DummyDataString = null;
         try {
             DummyDataString = new String(Files.readAllBytes(Paths.get(filename)), StandardCharsets.UTF_8);
         }catch (IOException e1) {
             System.out.println(e1.toString());
         }
-      return DummyDataString;
+        return DummyDataString;
     }
 
-    public String accessFileInSemanticJar(String path) {
+    public static String accessFileInSemanticJar(String path) {
         String result="";
         // this is the path within the jar file
         InputStream input = EventTemplateHandler.class.getResourceAsStream(path);
