@@ -9,16 +9,10 @@ import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import java.io.File;
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-//@SpringBootTest
 public class EventTemplateHandlerTest {
 
     private static Logger log = LoggerFactory.getLogger(EventTemplateHandlerTest.class);
@@ -28,8 +22,8 @@ public class EventTemplateHandlerTest {
     @Test
     public void testParseEiffelActivityFinishedEvent() {
         try {
-            EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
             String EventName = "EiffelActivityFinishedEvent";
+            EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
             String dataToBeParsed = FileUtils.readFileToString(new File(inputFilePathData), "UTF-8");
             String expectedDocument = FileUtils.readFileToString(new File(inputFilePathExpectedData), "UTF-8");
 
