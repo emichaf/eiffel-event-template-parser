@@ -46,9 +46,9 @@ public class ProducerController {
     @ResponseBody
     public JsonNode parseValuesInEventTemplate(@RequestBody JsonNode bodyJson, @RequestParam("msgType") String msgType) {
 
-        EventTemplateHandler mytemplatehandler = new EventTemplateHandler();
+        EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
 
-        return mytemplatehandler.eventTemplateParser(bodyJson.toString(), msgType);
+        return eventTemplateHandler.eventTemplateParser(bodyJson.toString(), msgType);
 
     }
 

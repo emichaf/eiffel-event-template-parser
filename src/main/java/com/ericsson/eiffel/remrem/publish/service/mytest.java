@@ -12,12 +12,12 @@ public class mytest {
 
         String EventName = "EiffelActivityFinishedEvent";
 
-        EventTemplateHandler mytemplatehandler = new EventTemplateHandler();
+        EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
 
         // dummy data for test
         String FetchDummyData = fetchDummyData("./testdummydata/dummy_data_" +EventName+".json");
 
-        System.out.println( mytemplatehandler.eventTemplateParser(FetchDummyData, EventName).toString());
+        System.out.println( eventTemplateHandler.eventTemplateParser(FetchDummyData, EventName).toString());
 
     }
 
