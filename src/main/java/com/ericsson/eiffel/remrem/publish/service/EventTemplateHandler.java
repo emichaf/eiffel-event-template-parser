@@ -35,9 +35,9 @@ class EventTemplateHandler {
         String EventName = "EiffelActivityFinishedEvent";
 
         // Semantics faulty at the moment use dummy below
-        //String Template = accessFileInSemanticJar(EVENT_TEMPLATE_PATH + EventName.toLowerCase() + ".json");
+        String Template = accessFileInSemanticJar(EVENT_TEMPLATE_PATH + EventName.toLowerCase() + ".json");
         //TODO: to be removed
-        String Template = fetchDummyEventTemplate(EventName);
+        //String Template = fetchDummyEventTemplate(EventName);
 
         // TODO: remove dummy data
         String FetchDummyData = fetchDummyData("./testdummydata/dummy_data_" +EventName+".json");
