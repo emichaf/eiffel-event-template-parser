@@ -26,44 +26,18 @@ public class EventTemplateHandler {
             .mappingProvider(new JacksonMappingProvider())
             .build();
 
-    // Path in Semantics JAR
-    // TODO: to be removed templates read from semantic JAR
-    public final String EVENT_TEMPLATE_PATH = "templates/";
-    public final String EVENT_SCHEMA_PATH = "schemas/input/";
+    // Paths in Semantics JAR
+    private final String EVENT_TEMPLATE_PATH = "templates/";
+    private final String EVENT_SCHEMA_PATH = "schemas/input/";
 
-
-
-    //TODO: to be removed
-    // FetchEventTemplate
-    public String fetchDummyEventTemplate(String eventname){
-        String TemplateString = null;
-        try {
-            TemplateString = new String(Files.readAllBytes(Paths.get("./testtemplates/"+eventname.toLowerCase()+".json")), StandardCharsets.UTF_8);
-        }catch (IOException e1) {
-            System.out.println(e1.toString());
-        }
-      return TemplateString;
-    }
-
-    //TODO: to be removed
-    // FetchEventSchema
-    public String fetchDummyEventEventSchema(String eventname){
-        String EventSchemaString = null;
-        try {
-            EventSchemaString = new String(Files.readAllBytes(Paths.get("./testschemas/" +eventname+".json")), StandardCharsets.UTF_8);
-        }catch (IOException e1) {
-            System.out.println(e1.toString());
-        }
-      return EventSchemaString;
-    }
-
-    // TemplateParser
-    public JsonNode templateParser(String event_template, String json_data , String event_name){
+    // eventTemplateParser
+    public JsonNode eventTemplateParser(String json_data , String event_name){
         JsonNode updatedJson = null;
         JsonFactory factory = new JsonFactory();
         ObjectMapper mapper = new ObjectMapper(factory);
         JsonNode rootNode = null;
         try {
+            String event_template = accessFileInSemanticJar(EVENT_TEMPLATE_PATH + event_name.toLowerCase() + ".json");
             rootNode = mapper.readTree(json_data);
             updatedJson = mapper.readValue(event_template, JsonNode.class);
         } catch (IOException e) {
@@ -85,8 +59,6 @@ public class EventTemplateHandler {
                 String myvalue = field.getValue().toString();
             try {
                     // Fetch Class name in Event Schema
-                    // TODO : remove dummy
-                    //String event_schema = fetchDummyEventEventSchema(event_name);
                     String event_schema = accessFileInSemanticJar(EVENT_SCHEMA_PATH + event_name + ".json");
 
                     // Filter javatype from Event Schema = class name
@@ -97,7 +69,6 @@ public class EventTemplateHandler {
                     Class myClass = Class.forName(myclass);
                     Object mapped_2_pojo = mapper.readValue(myvalue, myClass);
 
-                    //updatedJson = JsonPath_Handler_Add(updatedJson, mykey, mapped_2_pojo);
                     updatedJson = jsonPathHandlerSet(updatedJson, mykey, mapped_2_pojo);
 
                 } catch (ClassNotFoundException e) {
@@ -111,16 +82,13 @@ public class EventTemplateHandler {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }else{  // No POJO needed for update
                     String mykey = "$." + templateParamHandler(field.getKey());
                     Object myvalue = field.getValue();
                     updatedJson = jsonPathHandlerSet(updatedJson, mykey, myvalue);
             }
         } // while
-
         return updatedJson;
-
     }
 
     public JsonNode jsonPathHandlerAdd(JsonNode updated_Json, String jsonkey, Object pojo){
@@ -161,30 +129,19 @@ public class EventTemplateHandler {
         return jsonkey;
     }
 
-    // dummy data
-    public String fetchDummyData(String filename){
-        String DummyDataString = null;
-        try {
-            DummyDataString = new String(Files.readAllBytes(Paths.get(filename)), StandardCharsets.UTF_8);
-        }catch (IOException e1) {
-            System.out.println(e1.toString());
-        }
-      return DummyDataString;
-    }
-
     public String accessFileInSemanticJar(String path) {
         String result="";
-        // this is the path within the jar file
         InputStream input = EventTemplateHandler.class.getResourceAsStream(path);
         if (input == null) {
             input = EventTemplateHandler.class.getClassLoader().getResourceAsStream(path);
             try {
                 result= IOUtils.toString(input, StandardCharsets.UTF_8);
-                //System.out.println(result.toString());
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (NullPointerException e){
+                throw new NullPointerException("Can not find path: " + path);
             }
         }
         return result;
     }
-} // class EventHandler
+} // class EventTemplateHandler
