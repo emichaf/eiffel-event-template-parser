@@ -10,11 +10,10 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -48,8 +47,6 @@ public class EventTemplateHandler {
         Iterator<Map.Entry<String,JsonNode>> fieldsIterator = rootNode.fields();
         while (fieldsIterator.hasNext()) {
             Map.Entry<String,JsonNode> field = fieldsIterator.next();
-            //System.out.println("Key: " + field.getKey() + "\tValue:" + field.getValue());
-
             // Parse values to template
             // Check if POJO required for update in event template
             Pattern p = Pattern.compile("\\[\\d+\\]$");  // if ends with [d+]
@@ -60,17 +57,13 @@ public class EventTemplateHandler {
             try {
                     // Fetch Class name in Event Schema
                     String event_schema = accessFileInSemanticJar(EVENT_SCHEMA_PATH + event_name + ".json");
-
                     // Filter javatype from Event Schema = class name
                     JsonNode Json_from_schema = JsonPath.using(configuration).parse(event_schema.toString()).read(schemaClassPathHandler(field.getKey().replaceAll("\\[\\d+\\]$", "")));
                     String myclass = Json_from_schema.toString().replace("[","").replace("]","").replace("\"","");  // Ex ["com.ericsson.eiffel.semantics.events.PersistentLog"] to com.ericsson.eiffel.semantics.events.PersistentLog
-
                     // Initiate Class via reflection and map values - POJO
                     Class myClass = Class.forName(myclass);
                     Object mapped_2_pojo = mapper.readValue(myvalue, myClass);
-
                     updatedJson = jsonPathHandlerSet(updatedJson, mykey, mapped_2_pojo);
-
                 } catch (ClassNotFoundException e) {
                     //e.printStackTrace();
                     // No POJO required for adding new item in Array (ie no key/value pairs)

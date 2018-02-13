@@ -2,10 +2,7 @@ package com.ericsson.eiffel.remrem.publish.controller;
 
 import com.ericsson.eiffel.remrem.publish.service.EventTemplateHandler;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -44,11 +41,11 @@ public class ProducerController {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @RequestMapping(value = "/fetchparsevalues", method = RequestMethod.POST)
     @ResponseBody
-    public JsonNode parseValuesInEventTemplate(@RequestBody JsonNode bodyJson, @RequestParam("msgType") String msgType) {
+    public ResponseEntity<JsonNode> parseValuesInEventTemplate(@RequestBody JsonNode bodyJson, @RequestParam("msgType") String msgType) {
 
         EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
 
-        return eventTemplateHandler.eventTemplateParser(bodyJson.toString(), msgType);
+        return new ResponseEntity<JsonNode>(eventTemplateHandler.eventTemplateParser(bodyJson.toString(), msgType), HttpStatus.OK);
 
     }
 
