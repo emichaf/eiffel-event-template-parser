@@ -14,6 +14,8 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -36,7 +38,13 @@ public class EventTemplateHandler {
         ObjectMapper mapper = new ObjectMapper(factory);
         JsonNode rootNode = null;
         try {
-            String event_template = accessFileInSemanticJar(EVENT_TEMPLATE_PATH + event_name.toLowerCase() + ".json");
+            // TODO: Activate below when semantic Templates are updated... links part faulty
+            //String event_template = accessFileInSemanticJar(EVENT_TEMPLATE_PATH + event_name.toLowerCase() + ".json");
+
+            // TODO: Use temporary local templates with "correct" links
+            String event_template = new String(Files.readAllBytes(Paths.get("./testtemplates/"+event_name.toLowerCase()+".json")), StandardCharsets.UTF_8);
+
+
             rootNode = mapper.readTree(json_data);
             updatedJson = mapper.readValue(event_template, JsonNode.class);
         } catch (IOException e) {
@@ -96,13 +104,19 @@ public class EventTemplateHandler {
 
     public String templateParamHandler(String jsonkey){
         String[] strArray = jsonkey.split("\\.");
-        Pattern p = Pattern.compile("links\\[\\d+\\]$");  // if ends with [d+]
-        Matcher m = p.matcher(strArray[0]);
+
+
+        //    Pattern p = Pattern.compile("links\\[\\d+\\]$");  // if ends with [d+]
+        //    Matcher m = p.matcher(strArray[0]);
+
+
         try {
-            if (strArray[0].equals("meta")) {
+            if (strArray != null && strArray.length >0 && strArray[0].equals("meta")) {   //TODO: remove strArray.length !=0  ??
                 jsonkey = "msgParams." + jsonkey;
-            } else if (strArray[0].equals("data") || m.find()) {
+            } else if (strArray != null && strArray.length >0 && strArray[0].equals("data")) {   // TODO: else if (strArray[0].equals("data") || m.find()) {    remove strArray.length !=0  ??
                 jsonkey = "eventParams." + jsonkey;
+            } else if (strArray != null || strArray.length ==0 && jsonkey.substring(0, 5).equals("links")) {   // TODO: check if links should be outside eventParams or not !
+                // DO nothing
             } else {
                 throw new IllegalArgumentException("jsonkey in data to be parsed is not valid : " + jsonkey);
             }

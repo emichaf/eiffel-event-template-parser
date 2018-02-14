@@ -49,6 +49,32 @@ public class ProducerController {
 
     }
 
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @RequestMapping(value = "/doit", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> doit(@RequestBody JsonNode bodyJson, @RequestParam("msgType") String msgType) {
+
+        // TODO: handle other params like mp semantic
+        String url = "http://docker104-eiffel999.lmera.ericsson.se:8096/generateAndPublish/?mp=eiffelsemantics&msgType="+msgType;
+
+        // -- parse params in incoming request body -------------
+        EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
+        JsonNode parsedTemplate = eventTemplateHandler.eventTemplateParser(bodyJson.toString(), msgType);
+
+        // ----- RemRem Gen & Pub -------------
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<JsonNode> requestGenAndPub = new HttpEntity<JsonNode>(bodyJson, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(url, parsedTemplate, String.class);
+
+        return response;
+    }
+
+
+
 }
 
 

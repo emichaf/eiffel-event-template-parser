@@ -1,57 +1,40 @@
 {
-  "msgParams":{
-    "meta":{
-      "type":"EiffelTestSuiteStartedEvent",
-      "version":"1.0.0",
-      "tags":[
-
-      ],
-      "source":{
-        "domainId":"",
-        "host":"",
-        "name":"",
-        "uri":"",
-        "serializer":{
-          "groupId":"<required>",
-          "artifactId":"<required>",
-          "version":"<required>"
+    "msgParams": {
+        "meta": {
+            "type": "EiffelTestSuiteStartedEvent",
+            "version": "1.0.0",
+            "tags": [],
+            "source": {
+                "domainId": "",
+                "host": "",
+                "name": "",
+                "uri": ""
+            },
+            "security": {
+                "sdm": {
+                    "authorIdentity": "required if sdm present",
+                    "encryptedDigest": "required if sdm present"
+                }
+            }
         }
-      },
-      "security":{
-        "sdm":{
-          "authorIdentity":"<required>",
-          "encryptedDigest":"<required>"
-        }
-      }
-    }
-  },
-  "eventParams":{
-    "data":{
-      "name":"",
-      "categories":[
-
-      ],
-      "types":[
-
-      ],
-      "liveLogs":[
-        {
-          "name":"<required>",
-          "uri":"<required>"
-        }
-      ],
-      "customData":[
-        {
-          "key":"<required>",
-          "value":"<required>"
-        }
-      ]
     },
-    "links":[
-      {
-        "type":"<required>",
-        "target":"<required>"
-      }
-    ]
-  }
+    "eventParams": {
+        "data": {
+            "name": "required",
+            "categories": [],
+            "types": ["not requrired, if present can be anyone of ACCESSIBILITY,BACKUP_RECOVERY,COMPATIBILITY,CONVERSION,DISASTER_RECOVERY,FUNCTIONAL,INSTALLABILITY,INTEROPERABILITY,LOCALIZATION,MAINTAINABILITY,PERFORMANCE,PORTABILITY,PROCEDURE,RELIABILITY,SECURITY,STABILITY,USABILITY "],
+            "liveLogs": [{
+                "name": "required if livelogs present",
+                "uri": "required if livelogs present"
+            }],
+            "customData": [{
+                "key": "required if customData present",
+                "value": "required if customData present"
+            }]
+        },
+        "links": [{
+            "type": "required",
+            "target": "required"
+        }]
+    }
 }
