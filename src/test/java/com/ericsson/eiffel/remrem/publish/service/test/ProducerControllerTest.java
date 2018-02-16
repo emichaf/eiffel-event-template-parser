@@ -79,7 +79,7 @@ public class ProducerControllerTest {
         JsonNode dataToBeParsedJson = mapper.readTree(dataToBeParsed);
         JsonNode expectedJson = mapper.readTree(expectedDocument);
 
-        String inCorrectURL = "/fetchparsevalues";
+        String inCorrectURL = "/doitx";
         when(restTemplate.postForEntity(Mockito.contains(inCorrectURL), Mockito.<HttpEntity<String>>any(),
                 Mockito.eq(String.class), Mockito.anyMap())).thenReturn(responseBad);
 

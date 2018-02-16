@@ -63,14 +63,14 @@ public class ProducerController2Test {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode dataToBeParsedJson = mapper.readTree(dataToBeParsed);
 
-        mockMvc.perform(post("/*/fetchparsevalues")
+        mockMvc.perform(post("/fetchparsevalues")
                 .param(String.valueOf(dataToBeParsedJson), "EiffelActivityFinishedEvent")
-          //      .content()
+              //  .content()
                 .accept(MediaType.APPLICATION_JSON_VALUE))
           //      .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-          //      .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
           //      .andExpect(jsonPath("$.first", is(1)))
                 .andReturn();
         ;
