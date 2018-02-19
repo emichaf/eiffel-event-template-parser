@@ -10,7 +10,8 @@ public class mytest {
 
     public static void main(String[] args) {
 
-        String EventName = "EiffelActivityFinishedEvent";
+        //String EventName = "EiffelActivityFinishedEvent";
+        String EventName = "EiffelSourceChangeSubmittedEvent";
 
         EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
 

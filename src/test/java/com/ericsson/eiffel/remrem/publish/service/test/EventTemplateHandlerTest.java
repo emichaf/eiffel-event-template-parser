@@ -16,16 +16,16 @@ import java.io.File;
 public class EventTemplateHandlerTest {
 
     private static Logger log = LoggerFactory.getLogger(EventTemplateHandlerTest.class);
-    static private final String inputFilePathData = "src/test/resources/test_data_for_parsing_EiffelActivityFinishedEvent.json";
-    static private final String inputFilePathExpectedData = "src/test/resources/expected_parsed_EiffelActivityFinishedEvent.json";
+    static private final String inputFilePathData = "src/test/resources/";
+    static private final String inputFilePathExpectedData = "src/test/resources/";
 
     @Test
     public void testParseEiffelActivityFinishedEvent() {
         try {
             String EventName = "EiffelActivityFinishedEvent";
             EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
-            String dataToBeParsed = FileUtils.readFileToString(new File(inputFilePathData), "UTF-8");
-            String expectedDocument = FileUtils.readFileToString(new File(inputFilePathExpectedData), "UTF-8");
+            String dataToBeParsed = FileUtils.readFileToString(new File(inputFilePathData+"test_data_for_parsing_"+EventName+".json"), "UTF-8");
+            String expectedDocument = FileUtils.readFileToString(new File(inputFilePathExpectedData+"expected_parsed_"+EventName+".json"), "UTF-8");
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode expectedJson = mapper.readTree(expectedDocument);
@@ -42,4 +42,31 @@ public class EventTemplateHandlerTest {
         }
 
     }
+
+
+
+    @Test
+    public void testParseEiffelSourceChangeSubmittedEvent() {
+        try {
+            String EventName = "EiffelSourceChangeSubmittedEvent";
+            EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
+            String dataToBeParsed = FileUtils.readFileToString(new File(inputFilePathData+"test_data_for_parsing_"+EventName+".json"), "UTF-8");
+            String expectedDocument = FileUtils.readFileToString(new File(inputFilePathExpectedData+"expected_parsed_"+EventName+".json"), "UTF-8");
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode expectedJson = mapper.readTree(expectedDocument);
+
+            JsonNode actualParsedEventJson = eventTemplateHandler.eventTemplateParser(dataToBeParsed, EventName);
+
+            System.out.println("expectedJsonString: " + expectedJson.toString());
+            System.out.println("actualParsedEventJson: " + actualParsedEventJson.toString());
+
+            JSONAssert.assertEquals(expectedJson.toString(), actualParsedEventJson.toString(), true);
+
+        } catch (Exception e) {
+            log.info(e.getMessage(),e);
+        }
+
+    }
+
 }

@@ -31,6 +31,8 @@ public class EventTemplateHandler {
     private final String EVENT_TEMPLATE_PATH = "templates/";
     private final String EVENT_SCHEMA_PATH = "schemas/input/";
 
+    //private JsonNode updatedJson;
+
     // eventTemplateParser
     public JsonNode eventTemplateParser(String json_data , String event_name){
         JsonNode updatedJson = null;
@@ -49,40 +51,44 @@ public class EventTemplateHandler {
         // For each key/value pair for parsing to template
         Iterator<Map.Entry<String,JsonNode>> fieldsIterator = rootNode.fields();
         while (fieldsIterator.hasNext()) {
-            Map.Entry<String,JsonNode> field = fieldsIterator.next();
+            Map.Entry<String, JsonNode> field = fieldsIterator.next();
             // Parse values to template
             // Check if POJO required for update in event template
             Pattern p = Pattern.compile("\\[\\d+\\]$");  // if ends with [d+]
             Matcher m = p.matcher(field.getKey());
-            if(m.find()){
-                String mykey = "$." + templateParamHandler(field.getKey());
-                String myvalue = field.getValue().toString();
-            try {
-                    // Fetch Class name in Event Schema
-                    String event_schema = accessFileInSemanticJar(EVENT_SCHEMA_PATH + event_name + ".json");
-                    // Filter javatype from Event Schema = class name
-                    JsonNode Json_from_schema = JsonPath.using(configuration).parse(event_schema.toString()).read(schemaClassPathHandler(field.getKey().replaceAll("\\[\\d+\\]$", "")));
-                    String myclass = Json_from_schema.toString().replace("[","").replace("]","").replace("\"","");  // Ex ["com.ericsson.eiffel.semantics.events.PersistentLog"] to com.ericsson.eiffel.semantics.events.PersistentLog
-                    // Initiate Class via reflection and map values - POJO
-                    Class myClass = Class.forName(myclass);
-                    Object mapped_2_pojo = mapper.readValue(myvalue, myClass);
-                    updatedJson = jsonPathHandlerSet(updatedJson, mykey, mapped_2_pojo);
-                } catch (ClassNotFoundException e) {
-                    //e.printStackTrace();
-                    // No POJO required for adding new item in Array (ie no key/value pairs)
-                    updatedJson = jsonPathHandlerSet(updatedJson, mykey, myvalue.toString().replace("\"",""));
-                } catch (JsonParseException e) {
-                    e.printStackTrace();
-                } catch (JsonMappingException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }else{  // No POJO needed for update
-                    String mykey = "$." + templateParamHandler(field.getKey());
+
+            String mykey = "$." + templateParamHandler(field.getKey());
+
+                if(field.getValue().toString().equals("\"<%DELETE%>\"")){
+                    updatedJson = jsonPathHandlerDelete(updatedJson, mykey);
+                }else if (m.find()) {
+                    String myvalue = field.getValue().toString();
+                    try {
+                        // Fetch Class name in Event Schema
+                        String event_schema = accessFileInSemanticJar(EVENT_SCHEMA_PATH + event_name + ".json");
+                        // Filter javatype from Event Schema = class name
+                        JsonNode Json_from_schema = JsonPath.using(configuration).parse(event_schema.toString()).read(schemaClassPathHandler(field.getKey().replaceAll("\\[\\d+\\]$", "")));
+                        String myclass = Json_from_schema.toString().replace("[", "").replace("]", "").replace("\"", "");  // Ex ["com.ericsson.eiffel.semantics.events.PersistentLog"] to com.ericsson.eiffel.semantics.events.PersistentLog
+                        // Initiate Class via reflection and map values - POJO
+                        Class myClass = Class.forName(myclass);
+                        Object mapped_2_pojo = mapper.readValue(myvalue, myClass);
+                        updatedJson = jsonPathHandlerSet(updatedJson, mykey, mapped_2_pojo);
+                    } catch (ClassNotFoundException e) {
+                        //e.printStackTrace();
+                        // No POJO required for adding new item in Array (ie no key/value pairs)
+                        updatedJson = jsonPathHandlerSet(updatedJson, mykey, myvalue.toString().replace("\"", ""));
+                    } catch (JsonParseException e) {
+                        e.printStackTrace();
+                    } catch (JsonMappingException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {  // No POJO needed for update
                     Object myvalue = field.getValue();
                     updatedJson = jsonPathHandlerSet(updatedJson, mykey, myvalue);
-            }
+                }
         } // while
         return updatedJson;
     }
@@ -97,16 +103,17 @@ public class EventTemplateHandler {
         return updated_Json;
     }
 
+    public JsonNode jsonPathHandlerDelete(JsonNode updated_Json, String jsonkey){
+        updated_Json = JsonPath.using(configuration).parse(updated_Json.toString()).delete(jsonkey).json();
+        return updated_Json;
+    }
+
     public String templateParamHandler(String jsonkey){
         String[] strArray = jsonkey.split("\\.");
-
-
         Pattern p = Pattern.compile("links\\[\\d+\\]$");  // if ends with [d+]
         Matcher m = p.matcher(strArray[0]);
-
-
         try {
-            if (strArray != null && strArray.length >0 && strArray[0].equals("meta")) {   //TODO: remove strArray.length !=0  ??
+            if (strArray != null && strArray.length >0 && strArray[0].equals("meta")) {
                 jsonkey = "msgParams." + jsonkey;
             } else if (strArray != null && strArray.length >0 && strArray[0].equals("data") || m.find()) {
                 jsonkey = "eventParams." + jsonkey;
