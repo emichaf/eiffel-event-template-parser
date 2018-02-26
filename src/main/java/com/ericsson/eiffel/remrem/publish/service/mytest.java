@@ -12,12 +12,14 @@ public class mytest {
 
         //String EventName = "EiffelActivityFinishedEvent";
         //String EventName = "EiffelSourceChangeSubmittedEvent";
-        String EventName = "EiffelSourceChangeCreatedEvent";
+        //String EventName = "EiffelSourceChangeCreatedEvent";
+        String EventName = "EiffelCompositionDefinedEvent";
+
 
         EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
 
         // dummy data for test
-        String FetchDummyData = fetchDummyData("./testdummydata/dummy_data_" +EventName+".json");
+        String FetchDummyData = fetchDummyData("./testdummydata/test_data_for_parsing_" +EventName+".json");
 
         System.out.println( eventTemplateHandler.eventTemplateParser(FetchDummyData, EventName).toString());
 

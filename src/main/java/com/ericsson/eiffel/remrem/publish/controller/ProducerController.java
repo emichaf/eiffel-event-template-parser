@@ -75,6 +75,46 @@ public class ProducerController {
 
 
 
+
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @RequestMapping(value = "/doit2", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<?> doit2(@RequestBody JsonNode bodyJson, @RequestParam("msgType") String msgType) {
+
+        // TODO: handle other params like mp semantic
+
+        String url_gen = "http://docker104-eiffel999.lmera.ericsson.se:8095/eiffelsemantics?msgType="+msgType;
+        String url_pub = "http://docker104-eiffel999.lmera.ericsson.se:8096/producer/msg/?mp=eiffelsemantics&msgType="+msgType;
+
+        // -- parse params in incoming request body -------------
+        EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
+        JsonNode parsedTemplate = eventTemplateHandler.eventTemplateParser(bodyJson.toString(), msgType);
+
+        // ---- RemRem Generate --------------
+        HttpHeaders headers_gen = new HttpHeaders();
+        headers_gen.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<JsonNode> requestGen = new HttpEntity<JsonNode>(bodyJson, headers_gen);
+
+        ResponseEntity<JsonNode> response_gen = restTemplate.postForEntity(url_gen, parsedTemplate, JsonNode.class);
+
+        // ---- RemRem Published --------------
+        HttpHeaders headers_pub = new HttpHeaders();
+        headers_pub.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<JsonNode> requestPub = new HttpEntity<JsonNode>(bodyJson, headers_pub);
+
+        ResponseEntity<JsonNode> response_pub = restTemplate.postForEntity(url_pub, response_gen, JsonNode.class);
+
+        //return new ResponseEntity<>(response_gen.toString(), HttpStatus.OK);
+
+        //return response_gen;
+        return response_pub;
+    }
+
+
+
 }
 
 
