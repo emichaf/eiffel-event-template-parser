@@ -120,4 +120,28 @@ public class EventTemplateHandlerTest {
 
     }
 
+
+    @Test
+    public void testParseEiffelActivityTriggeredEvent() {
+        try {
+            String EventName = "EiffelActivityTriggeredEvent";
+            EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
+            String dataToBeParsed = FileUtils.readFileToString(new File(inputFilePathData+"test_data_for_parsing_"+EventName+".json"), "UTF-8");
+            String expectedDocument = FileUtils.readFileToString(new File(inputFilePathExpectedData+"expected_parsed_"+EventName+".json"), "UTF-8");
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode expectedJson = mapper.readTree(expectedDocument);
+
+            JsonNode actualParsedEventJson = eventTemplateHandler.eventTemplateParser(dataToBeParsed, EventName);
+
+            System.out.println("expectedJsonString: " + expectedJson.toString());
+            System.out.println("actualParsedEventJson: " + actualParsedEventJson.toString());
+
+            JSONAssert.assertEquals(expectedJson.toString(), actualParsedEventJson.toString(), true);
+
+        } catch (Exception e) {
+            log.info(e.getMessage(),e);
+        }
+
+    }
 }

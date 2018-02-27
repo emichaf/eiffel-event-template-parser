@@ -13,7 +13,8 @@ public class mytest {
         //String EventName = "EiffelActivityFinishedEvent";
         //String EventName = "EiffelSourceChangeSubmittedEvent";
         //String EventName = "EiffelSourceChangeCreatedEvent";
-        String EventName = "EiffelCompositionDefinedEvent";
+        //String EventName = "EiffelCompositionDefinedEvent";
+        String EventName = "EiffelActivityTriggeredEvent";
 
 
         EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
