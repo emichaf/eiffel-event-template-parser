@@ -11,7 +11,7 @@
   "data.fileInformation[0]":{"classifier" : "my_data.fileInformation[0].classifier", "extension" : "my_data.fileInformation[0].extension"},
   "data.fileInformation[1]":{"classifier" : "my_data.fileInformation[1].classifier", "extension" : "my_data.fileInformation[1].extension"},
   "data.buildCommand": "my_data.buildCommand",
-  "data.buildCommand": "my_data.requiresImplementation",
+  "data.requiresImplementation": "NONE",
   "data.name" : "my_data.name",
   "data.dependsOn[0]" : {"groupId" : "my_data.name.dependsOn[0].groupId", "artifactId" : "my_data.name.dependsOn[0].artifactId", "version" : "my_data.name.dependsOn[0].version"},
   "data.dependsOn[1]" : {"groupId" : "my_data.name.dependsOn[1].groupId", "artifactId" : "my_data.name.dependsOn[1].artifactId", "version" : "my_data.name.dependsOn[0].version"},
