@@ -19,7 +19,8 @@ public class mytest {
         //String EventName = "EiffelActivityCanceledEvent";
         //String EventName = "EiffelArtifactCreatedEvent";
         //String EventName = "EiffelTestCaseTriggeredEvent";
-        String EventName = "EiffelTestCaseStartedEvent";
+        //String EventName = "EiffelTestCaseStartedEvent";
+        String EventName = "EiffelTestCaseFinishedEvent";
 
 
         EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
