@@ -20,7 +20,9 @@ public class mytest {
         //String EventName = "EiffelArtifactCreatedEvent";
         //String EventName = "EiffelTestCaseTriggeredEvent";
         //String EventName = "EiffelTestCaseStartedEvent";
-        String EventName = "EiffelTestCaseFinishedEvent";
+        //String EventName = "EiffelTestCaseFinishedEvent";
+        String EventName ="EiffelConfidenceLevelModifiedEvent";
+
 
 
         EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
