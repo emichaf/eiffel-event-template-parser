@@ -19,11 +19,30 @@ public class mytest {
         //String EventName = "EiffelActivityCanceledEvent";
         //String EventName = "EiffelArtifactCreatedEvent";
         //String EventName = "EiffelTestCaseTriggeredEvent";
-        String EventName = "EiffelTestCaseStartedEvent";
+        //String EventName = "EiffelTestCaseStartedEvent";
         //String EventName = "EiffelTestCaseFinishedEvent";
         //String EventName ="EiffelConfidenceLevelModifiedEvent";
+        //String EventName ="EiffelAnnouncementPublishedEvent";
+        //String EventName ="EiffelArtifactReusedEvent";
+        //String EventName ="EiffelEnvironmentDefinedEvent";
+        //String EventName ="EiffelFlowContextDefinedEvent";
+        //String EventName ="EiffelIssueVerifiedEvent";
+        //String EventName ="EiffelTestCaseCanceledEvent";
+        //String EventName ="EiffelTestExecutionRecipeCollectionCreatedEvent";
+        //String EventName ="EiffelTestSuiteFinishedEvent";
+        //String EventName ="EiffelTestSuiteStartedEvent";
 
-
+        // Operation extension
+        //String EventName ="EiffelAlertAcknowledgedEvent";
+        //String EventName ="EiffelAlertCeasedEvent";
+        //String EventName ="EiffelAlertRaisedEvent";
+        //String EventName ="EiffelArtifactDeployedEvent";
+        //String EventName ="EiffelServiceAllocatedEvent";
+        //String EventName ="EiffelServiceDeployedEvent";
+        //String EventName ="EiffelServiceDiscontinuedEvent";
+        //String EventName ="EiffelServiceReturnedEvent";
+        //String EventName ="EiffelServiceStartedEvent";
+        String EventName ="EiffelServiceStoppedEvent";
 
         EventTemplateHandler eventTemplateHandler = new EventTemplateHandler();
 
